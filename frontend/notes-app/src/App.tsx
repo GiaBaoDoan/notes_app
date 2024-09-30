@@ -8,15 +8,15 @@ const router = createBrowserRouter([
     element: <Layout />, // Layout chứa Outlet
     children: [
       {
-        path: "dashboard", // URL sẽ là "/dashboard"
+        path: "/dashboard", // URL sẽ là "/dashboard"
         element: <Home />,
       },
       {
-        path: "login", // URL sẽ là "/login"
+        path: "/login", // URL sẽ là "/login"
         element: <Login />,
       },
       {
-        path: "signup", // URL sẽ là "/signup"
+        path: "/signup", // URL sẽ là "/signup"
         element: <SignUp />,
       },
     ],

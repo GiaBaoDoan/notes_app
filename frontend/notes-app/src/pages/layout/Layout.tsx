@@ -5,9 +5,7 @@ const Layout = () => {
   return (
     <>
       <Navbar />
-      <main>
-        <Outlet /> {/* Nơi các trang con sẽ được render */}
-      </main>
+      <Outlet />
     </>
   );
 };
