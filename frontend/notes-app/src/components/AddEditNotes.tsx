@@ -49,7 +49,7 @@ const AddEditNotes: React.FC<TypeProp> = ({
   };
   return (
     <div className="absolute left-1/2 -translate-x-1/2">
-      <div className="flex border p-5 bg-white  rounded-lg drop-shadow w-[600px] flex-col gap-2">
+      <div className="flex border p-5 bg-white rounded-lg drop-shadow w-[600px] flex-col gap-2">
         <div className="flex justify-between">
           <div className="flex flex-col flex-1 gap-2">
             <label className="uppercase label-input">title</label>

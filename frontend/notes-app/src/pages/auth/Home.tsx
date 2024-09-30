@@ -25,7 +25,7 @@ import { toast } from "react-toastify";
 
 const Home = () => {
   const [toogle, onToogle] = useToogle();
-  const [note, setNote] = useState<Note>();
+  const [note, setNote] = useState<Note | null>();
   const [statePost, setStatePost] = useState<string>("Add");
   const [searchParams] = useSearchParams();
   const url = searchParams.get("query");
@@ -57,7 +57,7 @@ const Home = () => {
   const handelType = (data: { type: string; note?: Note }) => {
     const { type, note } = data;
     setStatePost(type);
-    note && setNote(note);
+    note ? setNote(note) : setNote(null);
     onToogle();
   };
 
@@ -117,7 +117,7 @@ const Home = () => {
           />
         )}
       </div>
-      {!notes.length && (
+      {!isLoading && !notes.length && (
         <EmptyListNotes
           content={
             url

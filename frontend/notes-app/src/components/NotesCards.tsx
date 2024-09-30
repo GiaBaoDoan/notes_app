@@ -26,7 +26,7 @@ const NotesCards: React.FC<PropType> = ({
   onToogle,
 }) => {
   return (
-    <div className="border bg-white p-3 rounded hover:drop-shadow cursor-pointer">
+    <div className="border bg-white p-3 rounded-lg hover:drop-shadow cursor-pointer">
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-1">
           <h6 className="font-medium">{title}</h6>
