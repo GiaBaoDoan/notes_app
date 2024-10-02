@@ -33,7 +33,7 @@ const Login = () => {
       .then((res) => {
         setIsLoading(false);
         setItem(res.token);
-        navigate("/dashboard");
+        navigate("/");
         toast.success("Login successfully !");
       })
       .catch((err) => {
@@ -42,7 +42,7 @@ const Login = () => {
       });
   };
   useEffect(() => {
-    getItem() ? navigate("/dashboard") : "";
+    getItem() ? navigate("/") : "";
   }, []);
 
   return (

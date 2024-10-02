@@ -2,10 +2,11 @@ const Note = require("../models/notes.model");
 // get all notes
 const getNotes = async (req, res) => {
   const { user } = req.user;
-  const { query } = req.query;
+  const { query, page = 1, limit = 11 } = req.query;
   const regex = query ? { $regex: query, $options: "i" } : null;
 
   try {
+    const skip = (page - 1) * limit;
     const baseQuery = { userId: user._id };
     const filter = query
       ? {
@@ -18,7 +19,10 @@ const getNotes = async (req, res) => {
         }
       : baseQuery;
 
-    const notes = await Note.find(filter).sort({ isPinned: -1 });
+    const notes = await Note.find(filter)
+      .skip(skip)
+      .limit(limit)
+      .sort({ isPinned: -1 });
     return res.status(200).json(notes);
   } catch (error) {
     console.error(error);

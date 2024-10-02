@@ -19,7 +19,6 @@ app.use(
 app.use("/auth", authRoutes);
 app.use("/notes", noteRoutes);
 
-
 // run port
 app.listen(PORT, () => {
   connectDB();

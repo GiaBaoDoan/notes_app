@@ -12,7 +12,8 @@
   
   body {
     font-family: "Poppins", sans-serif;
-    background-color: '#fdfeff'
+    background-color: '#fdfeff';
+    
   }
 }
 
@@ -20,6 +21,9 @@
    .input-box {
       @apply w-full bg-transparent border-[1.5px] px-5 py-3 rounded mb-4 outline-none
    } 
+   .center-box {
+     @apply top-1/2 -translate-y-1/2 -translate-x-1/2 absolute left-1/2
+   }
    .btn-primary {
       @apply bg-primary py-2 px-3 text-white rounded hover:opacity-60 
    }

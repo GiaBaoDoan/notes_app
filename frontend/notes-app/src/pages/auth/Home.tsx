@@ -78,7 +78,7 @@ const Home = () => {
 
   useEffect(() => {
     accessToken ? handleVerifyToken() : navigate("/login");
-  }, [url]);
+  }, [url, accessToken]);
   return (
     <div>
       <div className="container pb-10 grid-cols-4 grid gap-5 mt-5">
@@ -117,12 +117,13 @@ const Home = () => {
           />
         )}
       </div>
+      {/* <InforProfile user={currentUser} /> */}
       {!isLoading && !notes.length && (
         <EmptyListNotes
           content={
             url
               ? "Opps got no results with your searching !!"
-              : "Start creating your first note!. Click the add button to jot down yours thoughts,ideas <br /> and reminders. Let's get started"
+              : `Start creating your first note!. Click the add button to jot down yours thoughts,ideas and reminders. Let's get started`
           }
         />
       )}

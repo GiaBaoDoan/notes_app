@@ -60,14 +60,63 @@ const login = async (req, res) => {
   // Đăng nhập thành công
   res.json({ message: "Login successful", token, email });
 };
-
+// get user
 const getUser = async (req, res) => {
   const { user } = req.user;
   return res.status(200).json(user);
+};
+
+// change password
+const changePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  try {
+    // Lấy thông tin người dùng hiện tại
+    const user = await User.findById(req.user.user._id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    // Kiểm tra mật khẩu hiện tại có đúng không
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Current password is incorrect" });
+    }
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+    return res.status(200).json({ message: "Password updated successfully" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Server error", err });
+  }
+};
+// edit profile
+const editProfile = async (req, res) => {
+  const { email, name } = req.body;
+  if (!email || !name) {
+    return res.status(400).json({ error: true, message: "Bad request !!" });
+  }
+  try {
+    // const checkEmailExist = await User.findOne({ email });
+    // if (checkEmailExist) {
+    //   return res.status(400).json({ error: true, message: "Email is used !!" });
+    // }
+    const user = await User.findById(req.user.user._id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    user.email = email;
+    user.name = name;
+    const token = jwt.sign({ user }, process.env.JWT_SECRET, {
+      expiresIn: "10h", // Token có hiệu lực trong 1 giờ
+    });
+    await user.save();
+    return res.status(200).json({ message: "Update successfully!", token });
+  } catch (err) {
+    return res.status(500).send("Server error !");
+  }
 };
 
 module.exports = {
   register,
   login,
   getUser,
+  editProfile,
+  changePassword,
 };

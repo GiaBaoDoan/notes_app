@@ -16,7 +16,7 @@ const PasswordInput: React.FC<PropType> = ({
   const [isShowPassword, onTooglePassword] = useToogle(true);
 
   return (
-    <div className="flex justify-between gap-3 border-[1.5px] px-5  rounded items-center mb-2">
+    <div className="flex mt-1 justify-between gap-3 border-[1.5px] px-5 rounded-lg items-center mb-2">
       <input
         value={value}
         onChange={onChange}
