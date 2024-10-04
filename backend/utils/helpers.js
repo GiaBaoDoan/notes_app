@@ -25,7 +25,7 @@ const sendOtpToEmail = async (email, user) => {
 
   const optionLink = !user.isVerified
     ? `https://notes-app-iwwr.vercel.app/${token}`
-    : `https://notes-app-iwwr.vercel.app//${token}`;
+    : `https://notes-app-iwwr.vercel.app/${token}`;
 
   const mailOptions = {
     from: process.env.EMAIL_USERNAME,
