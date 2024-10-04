@@ -3,6 +3,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Home, Layout, Login, SignUp } from "./pages";
 import ChangePassword from "./components/ChangePassword";
 import InforProfile from "./components/InforProfile";
+import VerifyEmail from "./components/VerifyEmail";
+import ResendEmail from "./components/ResendEmail";
+import ResetNewPassword from "./components/ResetNewPassword";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +31,18 @@ const router = createBrowserRouter([
       {
         path: "/edit-profile", // URL sẽ là "/signup"
         element: <InforProfile />,
+      },
+      {
+        path: "/verify-email/:token", // URL sẽ là "/signup"
+        element: <VerifyEmail />,
+      },
+      {
+        path: "/resend-email", // URL sẽ là "/signup"
+        element: <ResendEmail />,
+      },
+      {
+        path: "/reset-password/:token", // URL sẽ là "/signup"
+        element: <ResetNewPassword />,
       },
     ],
   },

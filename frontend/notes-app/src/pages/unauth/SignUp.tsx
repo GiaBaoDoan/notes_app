@@ -18,7 +18,9 @@ const SignUp = () => {
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { getItem } = useLocalStorage("accessToken");
+  const { setItem, getItem: getEmail } = useLocalStorage("userEmail");
+  const { getItem: getToken } = useLocalStorage("accessToken");
+  const accessToken = getToken();
 
   const handelSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -33,8 +35,8 @@ const SignUp = () => {
       .unwrap()
       .then(() => {
         setIsLoading(false);
-        toast.success("Login successfully !");
-        navigate("/login");
+        toast.success("Hãy xác thực email của bạn !");
+        setItem(email);
       })
       .catch((err) => {
         setIsLoading(false);
@@ -42,7 +44,7 @@ const SignUp = () => {
       });
   };
   useEffect(() => {
-    getItem() ? navigate("/dashboard") : "";
+    accessToken ? navigate("/dashboard") : "";
   }, []);
   return (
     <div className="flex flex-col justify-center items-center">
@@ -72,6 +74,7 @@ const SignUp = () => {
             placeholder="Enter your password"
           />
           {error && <span className="text-red-500 text-sm pb-1">{error}</span>}
+
           <button
             disabled={isLoading}
             type="submit"

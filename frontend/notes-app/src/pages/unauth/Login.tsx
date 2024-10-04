@@ -47,7 +47,7 @@ const Login = () => {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="mt-28 w-96 border rounded bg-white shadow px-7 py-10">
+      <div className="mt-28 w-96 border rounded bg-white shadow px-7 py-7">
         <form noValidate onSubmit={handelSubmit} className="flex flex-col">
           <h4 className="text-xl mb-5">Login</h4>
           <input
@@ -63,6 +63,7 @@ const Login = () => {
             value={password}
             placeholder="Enter your password"
           />
+
           {error && <span className="text-red-500 text-sm pb-1">{error}</span>}
           <button
             disabled={isLoading}
@@ -72,11 +73,17 @@ const Login = () => {
             {isLoading ? <Loader /> : "login"}
           </button>
           <p className="text-sm text-center mt-4 font-medium">
-            Not resgistered yet?
+            Not resgistered yet?{" "}
             <Link to="/signup" className="underline text-primary">
               Create an account
             </Link>
           </p>
+          <Link
+            to={"/resend-email"}
+            className="underline text-center text-sm mt-2 text-primary"
+          >
+            Quên mật khẩu hoặc xác thực email ?
+          </Link>
         </form>
       </div>
     </div>

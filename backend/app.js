@@ -14,13 +14,12 @@ app.use(
   })
 );
 
-
 // routes
 app.use("/auth", authRoutes);
 app.use("/notes", noteRoutes);
 
 // run port
-app.listen(PORT, () => {
-  connectDB();
+app.listen(PORT, async () => {
+  await connectDB();
   console.log(`App is running on ${PORT}`);
 });

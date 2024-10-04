@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema(
       required: true, // Bắt buộc nhập
       minlength: 6, // Mật khẩu phải có ít nhất 6 ký tự
     },
+    isVerified: {
+      type: Boolean,
+      default: false, // Mặc định là false cho đến khi email được xác thực
+    },
   },
   {
     timestamps: true, // Tự động thêm createdAt và updatedAt
