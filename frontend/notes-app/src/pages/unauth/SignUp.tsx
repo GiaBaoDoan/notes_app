@@ -18,7 +18,7 @@ const SignUp = () => {
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { setItem, getItem: getEmail } = useLocalStorage("userEmail");
+  const { setItem } = useLocalStorage("userEmail");
   const { getItem: getToken } = useLocalStorage("accessToken");
   const accessToken = getToken();
 
