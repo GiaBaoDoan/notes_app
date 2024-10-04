@@ -24,8 +24,8 @@ const sendOtpToEmail = async (email, user) => {
   });
 
   const optionLink = !user.isVerified
-    ? `http://localhost:5173/verify-email/${token}`
-    : `http://localhost:5173/reset-password/${token}`;
+    ? `https://notes-app-iwwr.vercel.app/${token}`
+    : `https://notes-app-iwwr.vercel.app//${token}`;
 
   const mailOptions = {
     from: process.env.EMAIL_USERNAME,
