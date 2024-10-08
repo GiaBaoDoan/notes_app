@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { userThunk } from "../thunk/user.thunk";
+import { UserType } from "..";
 
 type user = {
-  currentUser: any;
+  currentUser: UserType | null;
   isLoading: boolean;
   error: string;
 };
@@ -26,6 +27,7 @@ const userSlice = createSlice({
     });
     builder.addCase(userThunk.rejected, (state, action: any) => {
       state.isLoading = false;
+      state.currentUser = null;
       state.error = action.payload.response?.data?.error;
     });
   },

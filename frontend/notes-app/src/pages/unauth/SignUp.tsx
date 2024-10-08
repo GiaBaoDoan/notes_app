@@ -1,13 +1,12 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { validateEmail } from "../../untils/helpers";
 import useInput from "../../hook/useInput";
 import { PasswordInput } from "../../components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
 import { register } from "../../thunk/register.thunk";
 import { Loader } from "lucide-react";
-import { useLocalStorage } from "../../hook";
 import { toast } from "react-toastify";
 
 const SignUp = () => {
@@ -16,11 +15,7 @@ const SignUp = () => {
   const [password, setPassword] = useInput();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { setItem } = useLocalStorage("userEmail");
-  const { getItem: getToken } = useLocalStorage("accessToken");
-  const accessToken = getToken();
 
   const handelSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -36,19 +31,15 @@ const SignUp = () => {
       .then(() => {
         setIsLoading(false);
         toast.success("Hãy xác thực email của bạn !");
-        setItem(email);
       })
       .catch((err) => {
         setIsLoading(false);
         setError(err.response.data.error);
       });
   };
-  useEffect(() => {
-    accessToken ? navigate("/dashboard") : "";
-  }, []);
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="mt-28 w-96 border rounded bg-white shadow px-7 py-10">
+      <div className="mt-28 w-96 border rounded-lg bg-white shadow px-7 py-10">
         <form noValidate onSubmit={handelSubmit} className="flex flex-col">
           <h4 className="text-xl mb-5">Sign up</h4>
           <input

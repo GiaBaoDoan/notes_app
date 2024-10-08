@@ -7,33 +7,36 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 import PasswordInput from "./PasswordInput";
 import { resetPassword } from "../thunk/reset-password.thunk";
+import { PATH_URL } from "../untils/constants";
 
 const ResetNewPassword = () => {
-  const [newPassword, setNewPassword] = useInput();
   const [isLoading, setIsloading] = useState<boolean>(false);
-  const { token } = useParams();
   const navigate = useNavigate();
+  const { token } = useParams();
+  const [newPassword, setNewPassword] = useInput();
   const dispatch = useDispatch<AppDispatch>();
-  const handelSendOtp = () => {
+
+  const handleSendEmail = () => {
     setIsloading(true);
-    token &&
+    if (token) {
       dispatch(resetPassword({ token, newPassword }))
         .unwrap()
         .then((res) => {
           toast.success(res.message);
           setIsloading(false);
-          navigate("/login");
+          navigate(PATH_URL.LOGIN);
         })
         .catch((err) => {
           toast.error(err.response.data.message);
           setIsloading(false);
         });
+    }
   };
 
   const handelSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!newPassword) return toast.error("Không để trống");
-    handelSendOtp();
+    handleSendEmail();
   };
 
   return (
@@ -50,7 +53,7 @@ const ResetNewPassword = () => {
             placeholder="Reset new password"
           />
         </div>
-        <Link to={"/login"} className="text-primary underline">
+        <Link to={PATH_URL.LOGIN} className="text-primary underline">
           Đăng nhập
         </Link>
         <button

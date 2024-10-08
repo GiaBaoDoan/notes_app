@@ -19,7 +19,7 @@
 
 @layer components {
    .input-box {
-      @apply w-full bg-transparent border-[1.5px] px-5 py-3 rounded mb-4 outline-none
+      @apply w-full bg-transparent border-[1.5px] px-5 py-3 rounded-lg mb-4 outline-none
    } 
    .center-box {
      @apply top-1/2 -translate-y-1/2 -translate-x-1/2 absolute left-1/2
@@ -50,7 +50,6 @@
        -webkit-appearance: none;
        margin: 0;
    }
-
    /* Hide spin buttons in Firefox */
    input[type="number"] {
        -moz-appearance: textfield;

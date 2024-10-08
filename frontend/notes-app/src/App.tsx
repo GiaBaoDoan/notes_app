@@ -1,11 +1,14 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Home, Layout, Login, SignUp } from "./pages";
+import { PATH_URL } from "./untils/constants";
 import ChangePassword from "./components/ChangePassword";
 import InforProfile from "./components/InforProfile";
 import VerifyEmail from "./components/VerifyEmail";
 import ResendEmail from "./components/ResendEmail";
 import ResetNewPassword from "./components/ResetNewPassword";
+import UnAuth from "./pages/unauth/UnAuth";
+import Auth from "./pages/auth/Auth";
 
 const router = createBrowserRouter([
   {
@@ -13,36 +16,47 @@ const router = createBrowserRouter([
     element: <Layout />, // Layout chứa Outlet
     children: [
       {
-        path: "/", // URL sẽ là "/dashboard"
-        element: <Home />,
+        element: <Auth />,
+        children: [
+          {
+            path: PATH_URL.HOME,
+            element: <Home />,
+          },
+          {
+            path: PATH_URL.PROFILE,
+            element: <InforProfile />,
+          },
+          {
+            path: PATH_URL.CHANGE_PASSWORD,
+            element: <ChangePassword />,
+          },
+        ],
       },
       {
-        path: "/login", // URL sẽ là "/login"
-        element: <Login />,
-      },
-      {
-        path: "/signup", // URL sẽ là "/signup"
-        element: <SignUp />,
-      },
-      {
-        path: "/change-password", // URL sẽ là "/signup"
-        element: <ChangePassword />,
-      },
-      {
-        path: "/edit-profile", // URL sẽ là "/signup"
-        element: <InforProfile />,
-      },
-      {
-        path: "/verify-email/:token", // URL sẽ là "/signup"
-        element: <VerifyEmail />,
-      },
-      {
-        path: "/resend-email", // URL sẽ là "/signup"
-        element: <ResendEmail />,
-      },
-      {
-        path: "/reset-password/:token", // URL sẽ là "/signup"
-        element: <ResetNewPassword />,
+        element: <UnAuth />,
+        children: [
+          {
+            path: PATH_URL.LOGIN,
+            element: <Login />,
+          },
+          {
+            path: PATH_URL.REGISTER,
+            element: <SignUp />,
+          },
+
+          {
+            path: PATH_URL.VERIFY_EMAIL,
+            element: <VerifyEmail />,
+          },
+          {
+            path: PATH_URL.RESEND_OTP,
+            element: <ResendEmail />,
+          },
+          {
+            path: PATH_URL.RESET_PASSWORD,
+            element: <ResetNewPassword />,
+          },
+        ],
       },
     ],
   },

@@ -5,13 +5,13 @@ import {
   Modal,
   EmptyListNotes,
 } from "../../components";
-import { useLocalStorage, useToogle } from "../../hook";
+import { useToogle } from "../../hook";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { DataInput } from "../..";
 import { Note } from "../../slice/notes.slice";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import {
   deleteNote,
   getNotes,
@@ -19,9 +19,7 @@ import {
   postNote,
   updateNote,
   userThunk,
-  verifyToken,
 } from "../../thunk";
-import { toast } from "react-toastify";
 
 const Home = () => {
   const [toogle, onToogle] = useToogle();
@@ -29,9 +27,6 @@ const Home = () => {
   const [statePost, setStatePost] = useState<string>("Add");
   const [searchParams] = useSearchParams();
   const url = searchParams.get("query");
-  const navigate = useNavigate();
-  const { getItem, removeItem } = useLocalStorage("accessToken");
-  const accessToken = getItem();
   const { notes, isLoading } = useSelector(
     (state: RootState) => state.notesReducer
   );
@@ -62,23 +57,11 @@ const Home = () => {
   };
 
   // handle verifyToken
-  const handleVerifyToken = () => {
-    dispatch(verifyToken())
-      .unwrap()
-      .then(() => {
-        dispatch(getNotes(url || ""));
-        dispatch(userThunk());
-      })
-      .catch((err) => {
-        removeItem();
-        toast.error(err.response.data.error);
-        navigate("/login");
-      });
-  };
 
   useEffect(() => {
-    accessToken ? handleVerifyToken() : navigate("/login");
-  }, [url, accessToken]);
+    dispatch(userThunk());
+    dispatch(getNotes(url || ""));
+  }, [url]);
   return (
     <div>
       <div className="container pb-10 grid-cols-4 grid gap-5 mt-5">
@@ -117,7 +100,6 @@ const Home = () => {
           />
         )}
       </div>
-      {/* <InforProfile user={currentUser} /> */}
       {!isLoading && !notes.length && (
         <EmptyListNotes
           content={

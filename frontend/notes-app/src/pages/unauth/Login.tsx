@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { PasswordInput } from "../../components";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { validateEmail } from "../../untils/helpers";
 import { useDispatch } from "react-redux";
 import { login } from "../../thunk/login.thunk";
@@ -9,13 +9,14 @@ import useInput from "../../hook/useInput";
 import { Loader } from "lucide-react";
 import { useLocalStorage } from "../../hook";
 import { toast } from "react-toastify";
+import { PATH_URL } from "../../untils/constants";
 
 const Login = () => {
   const [error, setError] = useState<string>("");
   const [email, setEmail] = useInput();
   const [password, setPassword] = useInput();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { setItem, getItem } = useLocalStorage("accessToken");
+  const { setItem } = useLocalStorage("accessToken");
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const handelSubmit = async (e: FormEvent) => {
@@ -33,7 +34,7 @@ const Login = () => {
       .then((res) => {
         setIsLoading(false);
         setItem(res.token);
-        navigate("/");
+        navigate(PATH_URL.HOME);
         toast.success("Login successfully !");
       })
       .catch((err) => {
@@ -41,13 +42,10 @@ const Login = () => {
         setError(err.response.data.message);
       });
   };
-  useEffect(() => {
-    getItem() ? navigate("/") : "";
-  }, []);
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="mt-28 w-96 border rounded bg-white shadow px-7 py-7">
+      <div className="mt-28 w-96 border rounded-lg bg-white shadow px-7 py-7">
         <form noValidate onSubmit={handelSubmit} className="flex flex-col">
           <h4 className="text-xl mb-5">Login</h4>
           <input
@@ -56,7 +54,7 @@ const Login = () => {
             value={email}
             type="email"
             placeholder="Email"
-            className="input-box"
+            className="input-box rounded-lg"
           />
           <PasswordInput
             onChange={setPassword}
@@ -73,13 +71,13 @@ const Login = () => {
             {isLoading ? <Loader /> : "login"}
           </button>
           <p className="text-sm text-center mt-4 font-medium">
-            Not resgistered yet?{" "}
-            <Link to="/signup" className="underline text-primary">
+            Not resgistered yet?
+            <Link to={PATH_URL.REGISTER} className="underline text-primary">
               Create an account
             </Link>
           </p>
           <Link
-            to={"/resend-email"}
+            to={PATH_URL.RESEND_OTP}
             className="underline text-center text-sm mt-2 text-primary"
           >
             Quên mật khẩu hoặc xác thực email ?

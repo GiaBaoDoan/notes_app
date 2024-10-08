@@ -6,7 +6,6 @@ import NotesCards from "./NotesCards";
 import AddEditNotes from "./AddEditNotes";
 import Modal from "./Modal";
 import EmptyListNotes from "./EmptyListNotes";
-import Pagination from "./Pagination";
 
 export {
   Navbar,
@@ -14,7 +13,6 @@ export {
   Profile,
   SearchNavBar,
   NotesCards,
-  Pagination,
   AddEditNotes,
   EmptyListNotes,
   Modal,

@@ -5,6 +5,7 @@ import { AppDispatch } from "../store/store";
 import { verifyEmail } from "../thunk/verify-email.thunk";
 import { toast } from "react-toastify";
 import Modal from "./Modal";
+import { PATH_URL } from "../untils/constants";
 
 const VerifyEmail = () => {
   const { token } = useParams();
@@ -18,7 +19,7 @@ const VerifyEmail = () => {
       .then((res) => {
         toast.success(res.message);
         setIsLoading(false);
-        navigate("/login");
+        navigate(PATH_URL.LOGIN);
       })
       .catch((err) => {
         toast.error(err.response.data.message);

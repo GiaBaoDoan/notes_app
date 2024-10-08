@@ -5,8 +5,8 @@ import { getQueryUrl } from "../untils/helpers";
 
 interface PropType {
   onChange: React.ChangeEventHandler<HTMLInputElement>;
-  value: string;
   clearInput: () => void;
+  value: string;
 }
 
 const SearchNavBar: React.FC<PropType> = ({ onChange, value, clearInput }) => {

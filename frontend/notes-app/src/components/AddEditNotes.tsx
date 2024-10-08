@@ -39,7 +39,7 @@ const AddEditNotes: React.FC<TypeProp> = ({
       tags,
       isPinned: note?.isPinned,
     };
-    statePost === "Add" ? onPost(data) : onUpdate(data, note._id);
+    return statePost === "Add" ? onPost(data) : onUpdate(data, note._id);
   };
 
   const handleDeleteTag = (index: number) => {
