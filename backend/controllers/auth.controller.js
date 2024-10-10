@@ -5,7 +5,7 @@ const { sendOtpToEmail } = require("../utils/helpers");
 const createCustomError = require("../config/customError");
 
 // Hàm đăng ký
-const register = async (req, res) => {
+const register = async (req, res, next) => {
   const { name, email, password } = req.body;
   try {
     const existingUser = await User.findOne({ email });
@@ -51,13 +51,13 @@ const login = async (req, res, next) => {
 };
 
 // get user
-const getUser = async (req, res) => {
+const getUser = async (req, res, next) => {
   const { user } = req.user;
   return res.status(200).json(user);
 };
 
 // change password
-const changePassword = async (req, res) => {
+const changePassword = async (req, res, next) => {
   const { currentPassword, newPassword } = req.body;
   try {
     // Lấy thông tin người dùng hiện tại
@@ -81,7 +81,7 @@ const changePassword = async (req, res) => {
 };
 
 // edit profile
-const editProfile = async (req, res) => {
+const editProfile = async (req, res, next) => {
   const { email, name } = req.body;
   if (!email || !name) {
     return next(createCustomError("Vui lòng điền đầy đủ thông tin !!", 400));
@@ -105,7 +105,7 @@ const editProfile = async (req, res) => {
 };
 
 // verify email
-const verifyEmail = async (req, res) => {
+const verifyEmail = async (req, res, next) => {
   const { token } = req.body;
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -121,7 +121,7 @@ const verifyEmail = async (req, res) => {
 };
 
 // reverify email
-const reverifyEmail = async (req, res) => {
+const reverifyEmail = async (req, res, next) => {
   const { email } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -137,7 +137,7 @@ const reverifyEmail = async (req, res) => {
 };
 
 // reset password
-const resetPassword = async (req, res) => {
+const resetPassword = async (req, res, next) => {
   const { token, newPassword } = req.body;
   try {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decode) => {
