@@ -1,3 +1,4 @@
+const createCustomError = require("../config/customError");
 const Note = require("../models/notes.model");
 // get all notes
 const getNotes = async (req, res) => {
@@ -25,19 +26,14 @@ const getNotes = async (req, res) => {
       .sort({ isPinned: -1 });
     return res.status(200).json(notes);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error", error });
+    return next(createCustomError(error));
   }
 };
 // add notes
-const postNotes = async (req, res) => {
+const postNotes = async (req, res, next) => {
   const { user } = req.user;
   const { title, content, tags } = req.body;
-  if (!title || !content)
-    return res.status(400).json({
-      error: true,
-      message: "Bad request !!",
-    });
+  if (!title || !content) return next(createCustomError("Bad request", 404));
   try {
     const note = new Note({
       title,
@@ -58,13 +54,7 @@ const editNote = async (req, res) => {
   const { title, content, tags, isPinned } = req.body; // Lấy thông tin cập nhật từ body
 
   // Kiểm tra nếu `title` hoặc `content` bị thiếu
-  if (!title || !content) {
-    return res.status(400).json({
-      error: true, // Đặt `error` thành true để phản ánh lỗi
-      message: "Bad request: Title and content are required!",
-    });
-  }
-
+  if (!title || !content) return next(createCustomError("Bad request", 404));
   try {
     // Tìm kiếm ghi chú dựa trên `noteId` và `userId`
     const note = await Note.findOne({ _id: noteId, userId: user._id });

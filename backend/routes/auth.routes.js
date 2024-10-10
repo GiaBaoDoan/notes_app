@@ -12,7 +12,7 @@ const {
   resetPassword,
 } = require("../controllers/auth.controller.js");
 
-const authMiddleware = require("../middelware.js");
+const authMiddleware = require("../middleware/middelware.js");
 // verify token
 router.get("/verify-token", authMiddleware, (req, res) => {
   return res.status(200).send("ok");

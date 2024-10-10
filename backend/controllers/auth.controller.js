@@ -2,21 +2,21 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/users.model");
 const { sendOtpToEmail } = require("../utils/helpers");
+const createCustomError = require("../config/customError");
 
 // Hàm đăng ký
 const register = async (req, res) => {
   const { name, email, password } = req.body;
   try {
-    // Kiểm tra nếu email đã tồn tại
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ error: "Email đã được đăng ký" });
+      return next(createCustomError("Email đã được đăng ký !!", 400));
     }
     const hashPassword = bcrypt.hashSync(password, 10);
     const newUser = new User({
       name,
       email,
-      password: hashPassword, // Hash password trước khi lưu
+      password: hashPassword,
       isVerified: false,
     });
     await newUser.save();
@@ -25,26 +25,22 @@ const register = async (req, res) => {
       message: "Đăng ký thành công, xác thực email của bạn",
     });
   } catch (error) {
-    res.status(500).json({ error: "Có lỗi xảy ra" });
+    return next();
   }
 };
 
 // Hàm đăng nhập
-const login = async (req, res) => {
+const login = async (req, res, next) => {
   const { email, password } = req.body;
   // Tìm người dùng trong cơ sở dữ liệu
   const user = await User.findOne({ email });
   if (!user || !user.isVerified) {
-    return res
-      .status(400)
-      .json({ message: "Tài khoản hoặc mật khẩu không đúng" });
+    return next(createCustomError("Tài khoản hoặc mật khẩu không đúng", 404));
   }
   // So sánh mật khẩu
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res
-      .status(400)
-      .json({ message: "Tài khoản hoặc mật khẩu không đúng" });
+    return next(createCustomError("Tài khoản hoặc mật khẩu không đúng", 400));
   }
   const token = jwt.sign({ user }, process.env.JWT_SECRET, {
     expiresIn: "10h", // Token có hiệu lực trong 1 giờ
@@ -67,19 +63,20 @@ const changePassword = async (req, res) => {
     // Lấy thông tin người dùng hiện tại
     const user = await User.findById(req.user.user._id);
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return next(createCustomError("Không tìm thấy người dùng", 404));
     }
     // Kiểm tra mật khẩu hiện tại có đúng không
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Current password is incorrect" });
+      return next(createCustomError("Mật khẩu hiện tại không chính xác", 400));
     }
     user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
-    return res.status(200).json({ message: "Password updated successfully" });
+    return res
+      .status(200)
+      .json({ message: "Cập nhật mật khẩu mới thành công" });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({ message: "Server error", err });
+    return next();
   }
 };
 
@@ -87,11 +84,12 @@ const changePassword = async (req, res) => {
 const editProfile = async (req, res) => {
   const { email, name } = req.body;
   if (!email || !name) {
-    return res.status(400).json({ error: true, message: "Bad request !!" });
+    return next(createCustomError("Vui lòng điền đầy đủ thông tin !!", 400));
   }
   try {
     const user = await User.findById(req.user.user._id);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user)
+      return next(createCustomError("Không tìm thấy người dùng !!", 404));
 
     user.email = email;
     user.name = name;
@@ -100,9 +98,9 @@ const editProfile = async (req, res) => {
     });
 
     await user.save();
-    return res.status(200).json({ message: "Update successfully!", token });
+    return res.status(200).json({ message: "Cập nhật thành công!", token });
   } catch (err) {
-    return res.status(500).send("Server error !");
+    return next();
   }
 };
 
@@ -112,15 +110,13 @@ const verifyEmail = async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById({ _id: decoded.id });
-
-    if (!user) {
-      return res.status(404).json({ message: "không tìm thấy người dùng " });
-    }
+    if (!user)
+      return next(createCustomError("Không tìm thấy người dùng !!", 404));
     user.isVerified = true;
     await user.save();
     res.status(200).json({ message: "Xác thực email thành công" });
   } catch (error) {
-    res.status(400).json({ message: "Đã hết thời hạn xác thực email" });
+    return next();
   }
 };
 
@@ -129,17 +125,14 @@ const reverifyEmail = async (req, res) => {
   const { email } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (!user) {
-      return res
-        .status(400)
-        .json({ message: "Email có vẻ như chưa được đăng ký" });
-    }
+    if (!user)
+      return next(createCustomError("Email chưa được đăng ký !!", 404));
     await sendOtpToEmail(email, user);
     res.status(200).json({
       message: "Đã xác thực tới email",
     });
   } catch (err) {
-    res.status(500).json({ error: "Có lỗi xảy ra" });
+    return next();
   }
 };
 
@@ -149,25 +142,22 @@ const resetPassword = async (req, res) => {
   try {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decode) => {
       if (err) {
-        return res
-          .status(403)
-          .json({ message: "Phiên xác thực đã hết hạn hoặc không hợp lệ" });
+        return next(
+          createCustomError("Phiên đặt lại mật khẩu đã hết hạn !", 403)
+        );
       }
       const user = await User.findOne({ _id: decode.id });
-      if (!user) {
-        return res.status(404).json({ message: "không tìm thấy người dùng " });
-      }
+      if (!user)
+        return next(createCustomError("Email chưa được đăng ký !!", 404));
       const hashPassword = bcrypt.hashSync(newPassword, 10);
       user.password = hashPassword;
       await user.save();
       return res.status(200).json({ message: "Cập nhật mật khẩu thành công" });
     });
   } catch (err) {
-    return res.status(500).json({ error: "Co loi xay ra" });
+    return next();
   }
 };
-
-const logout = async (req, res) => {};
 
 module.exports = {
   register,

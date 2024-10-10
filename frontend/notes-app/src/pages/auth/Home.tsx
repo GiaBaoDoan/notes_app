@@ -48,15 +48,12 @@ const Home = () => {
   // pin note
   const handelPinNote = (id: string) => dispatch(pinNote(id));
 
-  // handel type update or post note
   const handelType = (data: { type: string; note?: Note }) => {
     const { type, note } = data;
     setStatePost(type);
     note ? setNote(note) : setNote(null);
     onToogle();
   };
-
-  // handle verifyToken
 
   useEffect(() => {
     dispatch(userThunk());

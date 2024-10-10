@@ -7,7 +7,7 @@ const {
   pinNote,
   searchNotes,
 } = require("../controllers/note.controller");
-const authMiddleware = require("../middelware");
+const authMiddleware = require("../middleware/middelware");
 const router = express.Router();
 router.get("/", authMiddleware, getNotes);
 router.post("/add-note", authMiddleware, postNotes);
