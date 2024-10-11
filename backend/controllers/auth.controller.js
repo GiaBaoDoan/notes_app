@@ -51,7 +51,7 @@ const login = async (req, res, next) => {
 };
 
 // get user
-const getUser = async (req, res, next) => {
+const getUser = async (req, res) => {
   const { user } = req.user;
   return res.status(200).json(user);
 };
